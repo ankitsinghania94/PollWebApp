@@ -27,7 +27,8 @@ class App extends Component {
       activeVotes : [],
       index: 0,
       direction: null,
-      selectedQuestion: 1
+      selectedQuestion: 1,
+      responseCount: 0,
     }
   }
     componentDidMount() {
@@ -35,12 +36,27 @@ class App extends Component {
         const questions = snapshot.val();
         console.log(questions);
         this.setState({questions: questions})
+        this.setResponseCount(questions);
       });
       firebase.database().ref('SelectedQuestion/').on('value', (snapshot) => {
         const response = snapshot.val();
         this.setState({ selectedQuestion: response.id });
+        this.setState({ responseCount: 0 });
       });
     }
+
+    setResponseCount(questions) {
+        let sum = 0;
+        Object.keys(questions).map((item) => {
+          if(questions[item].id === this.state.selectedQuestion) {
+            Object.keys(questions[item].options).map((obj) => {
+              sum = sum + questions[item].options[obj].vote;
+            })
+          }
+        });
+        console.log(sum, 'Value of Response');
+    }
+
     handleSelect(selectedIndex, e) {
       console.log(selectedIndex, e, this.state.direction, '!!');
       this.setState({
