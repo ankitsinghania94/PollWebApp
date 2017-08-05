@@ -5,8 +5,6 @@ import { BarChart,Bar, CartesianGrid, Tooltip, XAxis, YAxis, Legend} from 'recha
 import { Carousel, ListGroup, ListGroupItem,  Button } from 'react-bootstrap';
 // var firebase = require("firebase/app");
 import * as firebase from "firebase";
-
-
   var config = {
     apiKey: "AIzaSyAG7CxWol6qxwumpXgacaS3IHiKJLHz4kM",
     authDomain: "surveyapp-7dbb7.firebaseapp.com",
@@ -41,11 +39,12 @@ class App extends Component {
       firebase.database().ref('SelectedQuestion/').on('value', (snapshot) => {
         const response = snapshot.val();
         this.setState({ selectedQuestion: response.id });
+        console.log("called again");
         this.setState({ responseCount: 0 });
       });
     }
-
     setResponseCount(questions) {
+      console.log("called again,",questions);
         let sum = 0;
         Object.keys(questions).map((item) => {
           if(questions[item].id === this.state.selectedQuestion) {
@@ -55,8 +54,8 @@ class App extends Component {
           }
         });
         console.log(sum, 'Value of Response');
+        this.setState({ responseCount: sum  });
     }
-
     handleSelect(selectedIndex, e) {
       console.log(selectedIndex, e, this.state.direction, '!!');
       this.setState({
@@ -88,17 +87,6 @@ class App extends Component {
     }
   render() {
     const { questions } = this.state
-    // console.log(this.state.selectedQuestion, 'select');
-    // var totalSum = Object.keys(questions).map((item) => {
-    //   let sum = 0
-    //   if(questions[item].id === this.state.selectedQuestion) {
-    //     return sum = Object.keys(questions[item].options).map((obj) => {
-    //        sum = sum + questions[item].options[obj].vote;
-    //        return sum;
-    //     })
-    //   }
-    // })
-    // console.log(totalSum, 'Val');
     let choices;
     return (
       <Container>
@@ -119,6 +107,7 @@ class App extends Component {
                         }
                     </ListGroup>
                   </Question>
+                        <div className="responseCount">{this.state.responseCount}</div>
                       <Graph active={(val) => this.handleGraphClick(val, question)}>
                          {this.state.isGraphVisible && <ShowGraph data={this.state.activeVotes}/>}
                       </Graph>
@@ -145,7 +134,6 @@ const Header = (props) => {
     </div>
   )
 }
-
 const Question = (props) => {
   return(
     <div>{props.children}</div>
@@ -185,5 +173,4 @@ const ShowGraph = (props) => {
     </div>
   )
 }
-
 export default App;
