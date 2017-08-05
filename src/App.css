@@ -49,6 +49,10 @@
     padding: 10px;
 }
 
+.responseCount {
+    font-size: -webkit-xxx-large;
+}
+
 .btn-success {
     color: #fff;
     background-color: #5cb85c;

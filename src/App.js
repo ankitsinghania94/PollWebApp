@@ -41,11 +41,13 @@ class App extends Component {
       firebase.database().ref('SelectedQuestion/').on('value', (snapshot) => {
         const response = snapshot.val();
         this.setState({ selectedQuestion: response.id });
+        console.log("called again");
         this.setState({ responseCount: 0 });
       });
     }
 
     setResponseCount(questions) {
+      console.log("called again,",questions);
         let sum = 0;
         Object.keys(questions).map((item) => {
           if(questions[item].id === this.state.selectedQuestion) {
@@ -55,6 +57,7 @@ class App extends Component {
           }
         });
         console.log(sum, 'Value of Response');
+        this.setState({ responseCount: sum  });
     }
 
     handleSelect(selectedIndex, e) {
@@ -88,17 +91,6 @@ class App extends Component {
     }
   render() {
     const { questions } = this.state
-    // console.log(this.state.selectedQuestion, 'select');
-    // var totalSum = Object.keys(questions).map((item) => {
-    //   let sum = 0
-    //   if(questions[item].id === this.state.selectedQuestion) {
-    //     return sum = Object.keys(questions[item].options).map((obj) => {
-    //        sum = sum + questions[item].options[obj].vote;
-    //        return sum;
-    //     })
-    //   }
-    // })
-    // console.log(totalSum, 'Val');
     let choices;
     return (
       <Container>
@@ -119,6 +111,7 @@ class App extends Component {
                         }
                     </ListGroup>
                   </Question>
+                        <div className="responseCount">{this.state.responseCount}</div>
                       <Graph active={(val) => this.handleGraphClick(val, question)}>
                          {this.state.isGraphVisible && <ShowGraph data={this.state.activeVotes}/>}
                       </Graph>
