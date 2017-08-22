@@ -25,7 +25,7 @@ class App extends Component {
       activeVotes : [],
       index: 0,
       direction: null,
-      selectedQuestion: 1,
+      selectedQuestion: 0,
       responseCount: 0,
     }
   }
@@ -64,7 +64,7 @@ class App extends Component {
         isGraphVisible: false,
       });
       firebase.database().ref('SelectedQuestion/').set({
-        id: selectedIndex + 1
+        id: selectedIndex
       });
     }
     handleGraphClick(val, question) {
@@ -90,7 +90,7 @@ class App extends Component {
     let choices;
     return (
       <Container>
-        <h2>React Native Bangalore Meetup</h2>
+        <h2>Geekyants Survey</h2>
         <Carousel style={{width: '80%'}} activeIndex={this.state.index} direction={this.state.direction} onSelect={this.handleSelect.bind(this)}>
           {
             Object.keys(questions).map((question, index) => {
@@ -98,12 +98,13 @@ class App extends Component {
               return (
                 <Carousel.Item>
                   <Question>
-                    <QuestionText>Q{questions[question].id}: {question}</QuestionText>
+                    <QuestionText>Q{questions[question].id + 1}: {question}</QuestionText>
                       <ListGroup>
                         {
-                          Object.keys(questions[question].options).map((choice, index) =>
+                          questions[question].options ? Object.keys(questions[question].options).map((choice, index) =>
                               <ListGroupItem>{choice}&nbsp;&nbsp;&nbsp;{questions[question]['options'][choice].value}</ListGroupItem>
                           )
+                          : null
                         }
                     </ListGroup>
                   </Question>
